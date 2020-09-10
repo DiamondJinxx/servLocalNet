@@ -6,7 +6,7 @@ Server::Server(QWidget *parent)
     , ui(new Ui::Server)
 {
     ui->setupUi(this);
-    ui->tOut->setText("1234");
+    //ui->tOut->setText("1234");
     //ui->tOut->("56789");
     server = new QTcpServer(this);
     client = new QTcpSocket(this);
@@ -16,7 +16,7 @@ Server::Server(QWidget *parent)
         server->close();
         return ;
     }
-    connect(server, SIGNAL(newConnection()),this, SLOT());
+    connect(server, SIGNAL(newConnection()),this, SLOT(slotNewConnection()));
     ui->tOut->setReadOnly(true);
     //ui->tOut->append(z)
 
@@ -29,13 +29,15 @@ Server::~Server()
 
 void Server::slotNewConnection()
 {
+    qDebug() << "New connection!";
     client = server->nextPendingConnection();
-    connect((QObject*)client, SIGNAL(QAbstractSocket::disconnected()),(QObject*)client, SLOT(QObject::deleteLater()));
-    connect((QObject*)client, SIGNAL(readyRead()), this, SLOT(slotReadClient()));
+    connect(client, SIGNAL(disconnected()),client, SLOT(deleteLater()));
+    connect(client, SIGNAL(readyRead()), this, SLOT(slotReadClient()));
 }
 
 void Server::slotReadClient()
 {
+    qDebug()<<"New message!";
     if(client->bytesAvailable())
     {
         QByteArray answ;
@@ -46,10 +48,11 @@ void Server::slotReadClient()
             mass[mc] = QString::fromUtf8(answ);
         }
         else{
-            mc++;
-            ui->tOut->setText(mass[mc]);
+            mass[mc++] = QString::fromUtf8(answ);
+
         }
     }
+    ui->tOut->setText(mass[mc-1]);
 }
 
 void Server::on_btnBack_clicked()

@@ -10,6 +10,8 @@
 #include <QMessageBox>
 #include <QTime>
 
+#define MAX 10
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class Server; }
 QT_END_NAMESPACE
@@ -30,7 +32,7 @@ public:
     int mi = 0; // index of viewer message
     int port = 6666;
 
-    QString mass[10];
+    QString mass[MAX];
     QList<QString> mess;
     QTcpServer *server;
     QTcpSocket *client;
@@ -44,5 +46,6 @@ private slots:
 
 private:
     Ui::Server *ui;
+    void shiftMessage();
 };
 #endif // SERVER_H
