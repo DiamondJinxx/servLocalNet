@@ -40,6 +40,8 @@ public:
 private slots:
     void on_btnBack_clicked();
 
+    void on_btnNext_clicked();
+
 private:
     Ui::Server *ui;
 };
